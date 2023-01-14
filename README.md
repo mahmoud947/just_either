@@ -3,6 +3,16 @@
 
 just_either is a simple library created by function programming lover typed for easy and safe error handling with functional programming style in Dart.
 
+# Installation
+
+add package to your project
+
+```yaml
+dependencies:
+  just_either:
+   git: https://github.com/mahmoud947/just_either
+   ```
+
 ## Usage
 
 ### example
