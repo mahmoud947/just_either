@@ -5,7 +5,10 @@ import 'dart:io';
 
 void main(List<String> args) async {
   final data = await getData();
-  data.fold((failure) => print(failure.message), (data) => print(data));
+  data.fold(
+    (failure) => print(failure.message),
+    (data) => print(data),
+  );
   print('done');
 }
 

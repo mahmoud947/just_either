@@ -1,39 +1,56 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+# just_either
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+just_either is a simple library created by function programming lover typed for easy and safe error handling with functional programming style in Dart.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+### example
 
 ```dart
-const like = 'sample';
-```
+void main(List<String> args) async {
+  final data = await getData();
+  data.fold(
+    (failure) => print(failure.message),
+    (data) => print(data),
+  );
+  print('done');
+}
 
-## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+// return String on success http request
+// return failure on exception
+Future<Either<Failure, String>> getData() async {
+  final clint = HttpClient();
+  try {
+    final data = await clint
+        .getUrl(Uri.parse('https://jsonplaceholder.typicode.com/posts/1'))
+        .then((req) => req.close())
+        .then((res) => res.transform(utf8.decoder).join());
+    return Right(data);
+  } on Exception {
+    return Left(NetworkFailure(message: 'network failure'));
+  } finally {
+    clint.close();
+  }
+
+
+  abstract class Failure {
+  Failure({required this.message});
+  final String message;
+
+  @override
+  bool operator ==(covariant Failure other) {
+    if (identical(this, other)) return true;
+
+    return other.message == message;
+  }
+
+  @override
+  int get hashCode => message.hashCode;
+}
+
+class NetworkFailure extends Failure {
+  NetworkFailure({required super.message});
+}
+}```
